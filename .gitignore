@@ -1,0 +1,10 @@
+*.tgz
+/.DS_Store
+ansible.log
+/foreign
+/vagrant
+Vagrantfile
+/.vagrant
+
+.vault_pass
+/.imported_roles
