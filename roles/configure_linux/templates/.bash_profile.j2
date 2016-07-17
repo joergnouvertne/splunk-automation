@@ -1,0 +1,14 @@
+# .bash_profile
+
+# Get the aliases and functions
+if [ -f ~/.bashrc ]; then
+	. ~/.bashrc
+fi
+
+# User specific environment and startup programs
+
+PATH=$PATH:{{ splunk_home }}/bin:$HOME/local/bin:$HOME/bin
+export PATH
+
+SPLUNK_HOME={{ splunk_home }}
+export SPLUNK_HOME

@@ -1,0 +1,4 @@
+---
+# tasks file for configure_linux
+- include: check_vars.yml 
+- include: configure_splunk-env.yml

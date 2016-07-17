@@ -1,0 +1,36 @@
+---
+- name: Create splunk group with gid=2000
+  tags:
+    - install
+  group: name={{ splunk_group }} gid={{ splunk_gid }} state=present
+  become: true
+
+- name: Create splunk user with uid=2000
+  tags:
+    - install
+  user: name={{ splunk_user }} uid={{ splunk_gid }} group={{ splunk_group }}  
+        shell={{ splunk_user_shell }} home={{ splunk_user_home  }}
+        state=present
+  become: true
+
+- name: Check $SPLUNK_HOME has enough available disk space
+  tags:
+    - install
+  fail: msg="{{splunk_home_fs}} does not have enough available disk space ({{ splunk_home_free }} bytes"
+  when: "'{{ item.mount }}' == '{{ splunk_home_fs }}' 
+         and {{ item.size_available }} < {{ splunk_home_free }}
+        "
+  with_items: "{{ ansible_mounts }}"
+
+- name: Create $SPLUNK_HOME 
+  tags:
+    - install
+  file: path={{splunk_home}} state=directory owner={{splunk_user}} group={{splunk_group}} mode=0755
+  become: True
+
+- name: Copy basic shell profile
+  tags:
+    - install
+  template: src={{ splunk_user_profile }}.j2 dest={{ splunk_user_home }}/{{ splunk_user_profile }}
+            owner={{ splunk_user }} group={{ splunk_group}} mode=0600
+            backup=yes force=yes
