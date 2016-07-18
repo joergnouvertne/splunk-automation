@@ -12,3 +12,6 @@ splunk_user_profile: .bash_profile
 splunk_home: /opt/splunk
 splunk_home_fs: /
 splunk_home_free: 6000000000
+
+splunk_target_version: 'Splunk 6.4.1 (build debde650d26e)'
+splunk_package: splunk-6.4.1-debde650d26e-Linux-x86_64.tgz
