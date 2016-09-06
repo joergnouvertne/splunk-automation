@@ -1,0 +1,4 @@
+---
+# tasks file for install_splunk
+- include: check_vars.yml
+- include: install_splunk.yml

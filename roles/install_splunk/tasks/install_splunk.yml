@@ -1,0 +1,54 @@
+---
+- name: Remove ftr if it exists (-> previous incomplete installation)
+  tags:
+    - install
+  file: path={{splunk_home}}/ftr state=absent
+  register: spl_ftr
+
+- debug:  msg="splunk was not started after installation"
+  tags:
+    - install
+  when: spl_ftr.changed == true
+
+- name: check for splunk binary
+  tags:
+    - install
+  stat: path={{ splunk_home }}/bin/splunk
+  register: spl_bin
+
+- debug: var=spl_bin
+  tags:
+    - install
+
+- name: check if splunk is running
+  tags:
+    - install
+  command: "{{ splunk_home }}/bin/splunk status"
+  register: spl_status
+  ignore_errors: true
+  failed_when: spl_status.stderr != ""
+  changed_when: false
+  when: spl_bin.stat.exists
+
+- debug: var=spl_status
+  tags:
+    - install
+
+- name: check if splunk is up-2-date
+  tags:
+    - install
+  command: "{{ splunk_home }}/bin/splunk version"
+  register: spl_version
+  ignore_errors: true
+  failed_when: spl_status.stderr != ""
+  changed_when: false
+  when: spl_bin.stat.exists
+
+- debug: msg="{{spl_version.stdout_lines}}"
+  when: spl_bin.stat.exists
+
+- name: stop splunk if running and update required
+  command: "{{ splunk_home }}/bin/splunk stop"
+  when: "spl_bin.stat.exists and 'splunkd is not running.' not in spl_status.stdout 
+         and ('{{ splunk_target_version }}' not in spl_version.stdout or spl_ftr.changed)
+        "

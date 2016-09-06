@@ -1,0 +1,10 @@
+---
+- name: check for required variables 
+  fail: msg="{{ item }} is not defined" 
+  when: not {{ item }} 
+  with_items: 
+    - splunk_user
+    - splunk_home
+    - splunk_home_fs
+    - splunk_home_free
+    - splunk_target_version

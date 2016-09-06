@@ -1,0 +1,7 @@
+---
+# There variable are used to make the role work.
+# I highly recommend to define them centrally as part of the inventory group_vars/all
+splunk_user: splunk
+splunk_home: /opt/splunk
+splunk_home_fs: /
+splunk_home_free: 6000000000
